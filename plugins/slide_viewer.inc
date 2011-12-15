@@ -1,5 +1,7 @@
 <?php
 
+// $Id$
+
 /**
  * @file
  * ShowSlideStreamsInFieldSets class

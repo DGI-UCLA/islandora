@@ -1,6 +1,6 @@
 <?php
 
-
+// $Id$
 
 /**
  * @file
@@ -25,7 +25,7 @@ class formClass {
     $items = array();
 
     $items['admin/settings/fedora_repository'] = array(
-      'title' => t('Islandora Configure'),
+      'title' => t('Configure Islandora'),
       'description' => t('Enter the Islandora Collection information here'),
       'page callback' => 'drupal_get_form',
       'page arguments' => array('fedora_repository_admin'),
@@ -306,8 +306,8 @@ class formClass {
       '#type' => 'fieldset',
       '#title' => t('Advanced configuration options'),
       '#description' => t('Advanced configuration.  Under normal circumstances these will not be touched'),
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
+      '#collapsible' => true,
+      '#collapsed' => true,
     );
     $form['advanced']['fedora_object_display_title'] = array(
       '#type' => 'select',
@@ -587,7 +587,7 @@ class formClass {
         $form = new IngestObjectMetadataForm();
         return $form->create($collection_pid, $collection_label, $form_state);
       } catch (Exception $e) {
-        $form_state['storage']['xml'] = FALSE; // An error occured revert back to the QDC Form.
+        $form_state['storage']['xml'] = false; // An error occured revert back to the QDC Form.
       }
     }
     return $this->createQDCIngestForm($collection_pid, $collection_label, $form_state);
@@ -810,7 +810,7 @@ class formClass {
         $form = new EditObjectMetadataForm($form_state);
         return $form->create($pid, $client, $form_state);
       } catch (Exception $e) {
-        $form_state['storage']['xml'] = FALSE; // An error occured revert back to the QDC Form.
+        $form_state['storage']['xml'] = false; // An error occured revert back to the QDC Form.
       }
     }
     return $this->createQDCEditForm($pid, $dsid, $client, $form_state);

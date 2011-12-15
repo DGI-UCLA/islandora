@@ -43,7 +43,7 @@ class Fedora_Item {
       }
 
       $raw_objprofile = $this->soap_call('getObjectProfile', array('pid' => $this->pid, 'asOfDateTime' => ""));
-      
+
       if (!empty($raw_objprofile)) {
         $this->objectProfile = $raw_objprofile->objectProfile;
         $this->datastreams = $this->get_datastreams_list_as_array();
@@ -76,9 +76,10 @@ class Fedora_Item {
    */
   function add_datastream_from_file($datastream_file, $datastream_id, $datastream_label = NULL, $datastream_mimetype = '', $controlGroup = 'M', $logMessage = NULL) {
     module_load_include('inc', 'fedora_repository', 'MimeClass');
-    if (!is_file($datastream_file)) {
+    if (!is_file($datastream_file)){
       drupal_set_message("$datastream_file not found<br />", 'warning');
       return;
+
     }
     if (empty($datastream_mimetype)) {
       // Get mime type from the file extension.
@@ -232,11 +233,6 @@ class Fedora_Item {
         $relationship = "isPartOf";
         $namespaceURI = 'info:fedora/fedora-system:def/relations-external#';
         break;
-      case "rel:hasModel":
-      case "hasModel":
-        $relationship = "hasModel";
-        $namespaceURI = FEDORA_MODEL_URI;
-        break;
     }
 
     if (substr($object, 0, 12) != 'info:fedora/') {
@@ -297,10 +293,10 @@ class Fedora_Item {
       $i++;
       $url = variable_get('fedora_base_url', 'http://localhost:8080/fedora');
       if ($cursor == 0) {
-        $url .= "/objects?query=$field~$pattern&pid=true&title=TRUE&resultFormat=xml&maxResults=$max_results";
+        $url .= "/objects?query=$field~$pattern&pid=true&title=true&resultFormat=xml&maxResults=$max_results";
       }
       else {
-        $url .= "/objects?pid=true&title=true&sessionToken=$session_token&resultFormat=xml&maxResults=$max_results";
+        $url .= "/objects?pid=true&title=truesessionToken=$session_token&resultFormat=xml&maxResults=$max_results";
       }
 
       if (count($resultFields) > 0) {
@@ -308,6 +304,7 @@ class Fedora_Item {
       }
 
       $resultxml = do_curl($url);
+
       libxml_use_internal_errors(TRUE);
       $resultelements = simplexml_load_string($resultxml);
       if ($resultelements === FALSE) {
@@ -561,6 +558,7 @@ class Fedora_Item {
     $relsextxml->loadXML($relsext);
     $relsextxml->normalizeDocument();
     $rels = $relsextxml->getElementsByTagNameNS('info:fedora/fedora-system:def/relations-external#', '*');
+
     foreach ($rels as $child) {
       if (empty($relationship) || preg_match("/$relationship/", $child->tagName)) {
         $relationships[] = array(
@@ -570,36 +568,12 @@ class Fedora_Item {
         );
       }
     }
-
     return $relationships;
-  }
-
-
-    function get_models() {
-    $relationships = array();
-    try {
-      $relsext = $this->get_datastream_dissemination('RELS-EXT');
-    } catch (exception $e) {
-      drupal_set_message(t("Error retrieving RELS-EXT of object $pid"), 'error');
-      return $relationships;
-    }
-
-    // Parse the RELS-EXT into an associative array.
-    $relsextxml = new DOMDocument();
-    $relsextxml->loadXML($relsext);
-    $relsextxml->normalizeDocument();
-    $mods = $relsextxml->getElementsByTagNameNS(FEDORA_MODEL_URI, '*');
-    foreach ($mods as $child) {
-      if (empty($relationship) || preg_match("/$relationship/", $child->tagName)) {
-        $relationships[] = array(
-          'subject' => $this->pid,
-          'predicate' => $child->tagName,
-          'object' => substr($child->getAttributeNS('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'resource'), 12),
-        );
-      }
-    }
-
-    return $relationships;
+    //$children = $relsextxml->RDF->description;
+    //$children = $relsextxml->RDF->description;
+    //$params = array( 'pid' => $this->pid,
+    //                 'relationship' => 'NULL' );
+    //return $this->soap_call( 'getRelationships', $params );
   }
 
   /**
@@ -884,7 +858,7 @@ class Fedora_Item {
               drupal_set_message(t("Error trying to call SOAP function $function_name. Check watchdog logs for more information."), 'error');
             }
 
-            watchdog(t("FEDORA_REPOSITORY"), "Error Trying to call SOAP function @fn: @e", array('@fn' => $function_name, '@e' => $e), NULL, WATCHDOG_ERROR);
+            watchdog(t("FEDORA_REPOSITORY"), "Error Trying to call SOAP function !fn: !e", array('!fn' => $function_name, '!e' => $e), NULL, WATCHDOG_ERROR);
           }
           return NULL;
         }
@@ -903,7 +877,7 @@ class Fedora_Item {
         } catch (exception $e) {
 
           if (!$quiet) {
-            watchdog(t("FEDORA_REPOSITORY"), "Error trying to call SOAP function @fn: @e", array('@fn' => $function_name, '@e' => $e), NULL, WATCHDOG_ERROR);
+            watchdog(t("FEDORA_REPOSITORY"), "Error trying to call SOAP function !fn: !e", array('!fn' => $function_name, '!e' => $e), NULL, WATCHDOG_ERROR);
           }
           return NULL;
         }

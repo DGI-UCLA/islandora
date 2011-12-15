@@ -64,7 +64,7 @@ class CollectionPolicy extends XMLDatastream {
   /**
    * Ingests a new Collection Policy datastream to the specified 
    * PID with the DSID specified.  The file should be a valid collection
-   * policy XML.  Returns FALSE on failure.
+   * policy XML.  Returns false on failure.
    *
    * @param string $pid
    * @param string $name
@@ -92,7 +92,7 @@ class CollectionPolicy extends XMLDatastream {
   /**
    * Ingests a new Collection Policy datastream to the specified 
    * PID with the DSID specified.  Clones the collection policy from the 
-   * source collection pid. Returns FALSE on failure.
+   * source collection pid. Returns false on failure.
    *
    * @param string $pid
    * @param string $name
@@ -122,7 +122,7 @@ class CollectionPolicy extends XMLDatastream {
   /**
    * Ingests a new minimum  Collection Policy datastream to the specified 
    * PID with the DSID specified.  Initializes the policy with the specified values.
-   * Returns FALSE on failure
+   * Returns false on failure
    *
    * @param string $pid
    * @param string $name
@@ -234,7 +234,7 @@ class CollectionPolicy extends XMLDatastream {
       $termEl = $newDom->createElement('term', $term->value);
       $termEl->setAttribute('field', $term->field);
       if (strval($sXml->search_terms->default) == $term->field) {
-        $termEl->setAttribute('default', 'TRUE');
+        $termEl->setAttribute('default', 'true');
       }
       $search_termsEl->appendChild($termEl);
     }
@@ -321,7 +321,7 @@ class CollectionPolicy extends XMLDatastream {
 
   /**
    * Sets the path to the staging area to use for this 
-   * collection. If specified path is blank (or FALSE) it will
+   * collection. If specified path is blank (or false) it will
    * remove the staging are path element from the collection policy.
    *
    * @param string $path 
@@ -360,14 +360,13 @@ class CollectionPolicy extends XMLDatastream {
    * @param string $dsid
    * @return string $nextPid
    */
-  public function getNextPid($dsid, $content_model = null) {
+  public function getNextPid($dsid) {
     $ret = FALSE;
-
     if (self::valid_dsid($dsid) && $this->validate()) {
       $content_models = $this->xml->getElementsByTagName('content_models')->item(0)->getElementsByTagName('content_model');
       $namespace = FALSE;
       for ($i = 0; $namespace === FALSE && $i < $content_models->length; $i++) {
-        if (strtolower($content_models->item($i)->getAttribute('dsid')) == strtolower($dsid) && (strtolower($content_models->item($i)->getAttribute('pid') == $content_model) || $content_model == null)) {
+        if (strtolower($content_models->item($i)->getAttribute('dsid')) == strtolower($dsid)) {
           $namespace = $content_models->item($i)->getAttribute('namespace');
         }
       }
@@ -436,7 +435,7 @@ class CollectionPolicy extends XMLDatastream {
         $terms = $this->xml->getElementsByTagName('search_terms')->item(0)->getElementsByTagName('term');
         for ($i = 0; $i < $terms->length; $i++) {
           $default = $terms->item($i)->attributes->getNamedItem('default');
-          $default = ($default !== NULL) ? (strtolower($default->nodeValue) == 'TRUE') : FALSE;
+          $default = ($default !== NULL) ? (strtolower($default->nodeValue) == 'true') : FALSE;
           $ret[] = ($asArray) ? array('value' => $terms->item($i)->nodeValue,
             'field' => $terms->item($i)->getAttribute('field'),
             'default' => $default) : $terms->item($i)->nodeValue;
@@ -541,7 +540,7 @@ class CollectionPolicy extends XMLDatastream {
           if ($terms->item($i)->attributes->getNamedItem('default') !== NULL) {
             $terms->item($i)->removeAttribute('default');
           }
-        $found->setAttribute('default', 'TRUE');
+        $found->setAttribute('default', 'true');
         $ret = TRUE;
       }
     }
@@ -551,7 +550,7 @@ class CollectionPolicy extends XMLDatastream {
   /**
    * Removes the specified content model from the collection policy.  This will only 
    * prevent future ingests of the removed model to the collection.  $cm should be 
-   * a valid ContentModel object.  Returns FALSE on failure or when the CM was not found in
+   * a valid ContentModel object.  Returns false on failure or when the CM was not found in
    * the collection policy.
    *
    * @param ContentModel $cm
@@ -579,7 +578,7 @@ class CollectionPolicy extends XMLDatastream {
 
   /**
    * addModel ??
-   * @param ContentModel $cm
+   * @param type $cm
    * @param type $namespace
    * @return type 
    */

@@ -102,7 +102,7 @@ abstract class XMLDatastream {
    * @return XMLDatastream $cm
    */
   public function __construct($xmlStr, $pid = NULL, $dsid = NULL) {
-    libxml_use_internal_errors(TRUE);
+    libxml_use_internal_errors(true);
 
     $this->pid = $pid;
     $this->dsid = $dsid;
@@ -253,7 +253,7 @@ abstract class XMLDatastream {
 
   /**
    * Gets the history of the datastream from fedora.
-   * Returns FALSE on failure.
+   * Returns false on failure.
    *
    * @return string[] $ret
    */
